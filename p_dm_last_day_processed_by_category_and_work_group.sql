@@ -1,5 +1,5 @@
 -- 创建表(如果不存在)
-CREATE TABLE IF NOT EXISTS dm_last_day_processed (
+CREATE TABLE IF NOT EXISTS ods.dm_last_day_processed (
     id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '主键',
     work_group VARCHAR(200) COMMENT '工作组',
     process_category VARCHAR(20) COMMENT '处理类别',
@@ -16,10 +16,10 @@ CREATE TABLE IF NOT EXISTS dm_last_day_processed (
 ) COMMENT '工作组每日处理统计结果表';
 
 -- 清空目标表
-TRUNCATE TABLE dm_last_day_processed;
+TRUNCATE TABLE ods.dm_last_day_processed;
 
 -- 插入并转换数据
-INSERT INTO dm_last_day_processed (
+INSERT INTO ods.dm_last_day_processed (
     work_group, 
     process_category, 
     count, 
@@ -38,5 +38,5 @@ SELECT
     d.stat_month,
     d.stat_day,
     d.company_type
-FROM dw_last_day_processed d
-LEFT JOIN dw_work_group_mapping m ON d.work_group = m.code;
+FROM ods.dw_last_day_processed d
+LEFT JOIN ods.dw_work_group_mapping m ON d.work_group = m.code;
