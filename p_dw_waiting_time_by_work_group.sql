@@ -46,27 +46,33 @@
         total_waiting_minutes, 
         avg_waiting_minutes,
         ticket_count,
-        stat_date, 
+        stat_date,
+        stat_year,
+        stat_month,
+        stat_day,
         period_type, 
         company_type
     )
     -- 当天数据统计
     SELECT 
         work_group,
-        SUM(TIMESTAMPDIFF(MINUTE, arrival_time, into_pool_time)) as total_waiting_minutes,
-        AVG(TIMESTAMPDIFF(MINUTE, arrival_time, into_pool_time)) as avg_waiting_minutes,
+        SUM(TIMESTAMPDIFF(MINUTE, into_pool_time, arrival_time)) as total_waiting_minutes,
+        AVG(TIMESTAMPDIFF(MINUTE, into_pool_time, arrival_time)) as avg_waiting_minutes,
         COUNT(1) as ticket_count,
         CURRENT_DATE as stat_date,
+        YEAR(CURRENT_DATE) as stat_year,
+        MONTH(CURRENT_DATE) as stat_month,
+        DAY(CURRENT_DATE) as stat_day,
         'day' as period_type,
         CASE 
             WHEN work_group IN ('GXZX_GXCBZ', 'GXZX_GXSRZ', 'GXZX_GXSRCBZ', 'GXZX_ZCCHZ', 'GXZX_FYXCZ', 'GZZXZ_ZZBBZ', 'GZZX_SWZ') THEN 'listed'
             WHEN work_group IN ('GXZX_JYB_FSS', 'GXZX_FSSZZBBB', 'GXZX_FSSHSB') THEN 'unlisted'
         END as company_type
-    FROM t_share_fssc_inst
+    FROM t_share_fssc_task
     WHERE del_flag_ = 0
         AND arrival_time IS NOT NULL 
         AND into_pool_time IS NOT NULL
-        AND arrival_time < into_pool_time
+        AND arrival_time >= into_pool_time
         AND work_group IN (
             'GXZX_GXCBZ', 'GXZX_GXSRZ', 'GXZX_GXSRCBZ', 'GXZX_ZCCHZ', 
             'GXZX_FYXCZ', 'GZZXZ_ZZBBZ', 'GZZX_SWZ',
@@ -80,20 +86,23 @@
     -- 当月数据统计
     SELECT 
         work_group,
-        SUM(TIMESTAMPDIFF(MINUTE, arrival_time, into_pool_time)) as total_waiting_minutes,
-        AVG(TIMESTAMPDIFF(MINUTE, arrival_time, into_pool_time)) as avg_waiting_minutes,
+        SUM(TIMESTAMPDIFF(MINUTE, into_pool_time, arrival_time)) as total_waiting_minutes,
+        AVG(TIMESTAMPDIFF(MINUTE, into_pool_time, arrival_time)) as avg_waiting_minutes,
         COUNT(1) as ticket_count,
         DATE_FORMAT(CURRENT_DATE, '%Y-%m-01') as stat_date,
+        YEAR(CURRENT_DATE) as stat_year,
+        MONTH(CURRENT_DATE) as stat_month,
+        NULL as stat_day,
         'month' as period_type,
         CASE 
             WHEN work_group IN ('GXZX_GXCBZ', 'GXZX_GXSRZ', 'GXZX_GXSRCBZ', 'GXZX_ZCCHZ', 'GXZX_FYXCZ', 'GZZXZ_ZZBBZ', 'GZZX_SWZ') THEN 'listed'
             WHEN work_group IN ('GXZX_JYB_FSS', 'GXZX_FSSZZBBB', 'GXZX_FSSHSB') THEN 'unlisted'
         END as company_type
-    FROM t_share_fssc_inst
+    FROM t_share_fssc_task
     WHERE del_flag_ = 0
         AND arrival_time IS NOT NULL 
         AND into_pool_time IS NOT NULL
-        AND arrival_time < into_pool_time
+        AND arrival_time >= into_pool_time
         AND work_group IN (
             'GXZX_GXCBZ', 'GXZX_GXSRZ', 'GXZX_GXSRCBZ', 'GXZX_ZCCHZ', 
             'GXZX_FYXCZ', 'GZZXZ_ZZBBZ', 'GZZX_SWZ',
@@ -107,20 +116,23 @@
     -- 当年数据统计
     SELECT 
         work_group,
-        SUM(TIMESTAMPDIFF(MINUTE, arrival_time, into_pool_time)) as total_waiting_minutes,
-        AVG(TIMESTAMPDIFF(MINUTE, arrival_time, into_pool_time)) as avg_waiting_minutes,
+        SUM(TIMESTAMPDIFF(MINUTE, into_pool_time, arrival_time)) as total_waiting_minutes,
+        AVG(TIMESTAMPDIFF(MINUTE, into_pool_time, arrival_time)) as avg_waiting_minutes,
         COUNT(1) as ticket_count,
         DATE_FORMAT(CURRENT_DATE, '%Y-01-01') as stat_date,
+        YEAR(CURRENT_DATE) as stat_year,
+        NULL as stat_month,
+        NULL as stat_day,
         'year' as period_type,
         CASE 
             WHEN work_group IN ('GXZX_GXCBZ', 'GXZX_GXSRZ', 'GXZX_GXSRCBZ', 'GXZX_ZCCHZ', 'GXZX_FYXCZ', 'GZZXZ_ZZBBZ', 'GZZX_SWZ') THEN 'listed'
             WHEN work_group IN ('GXZX_JYB_FSS', 'GXZX_FSSZZBBB', 'GXZX_FSSHSB') THEN 'unlisted'
         END as company_type
-    FROM t_share_fssc_inst
+    FROM t_share_fssc_task
     WHERE del_flag_ = 0
         AND arrival_time IS NOT NULL 
         AND into_pool_time IS NOT NULL
-        AND arrival_time < into_pool_time
+        AND arrival_time >= into_pool_time
         AND work_group IN (
             'GXZX_GXCBZ', 'GXZX_GXSRZ', 'GXZX_GXSRCBZ', 'GXZX_ZCCHZ', 
             'GXZX_FYXCZ', 'GZZXZ_ZZBBZ', 'GZZX_SWZ',
@@ -130,4 +142,4 @@
     GROUP BY work_group;
 
     -- 建议在t_share_fssc_inst表上创建如下索引
-    -- CREATE INDEX idx_fssc_inst_waiting ON t_share_fssc_inst(del_flag_, work_group, arrival_time, into_pool_time, create_time_);
+    -- CREATE INDEX idx_fssc_inst_waiting ON t_share_fssc_inst(del_flag_, work_group, into_pool_time, arrival_time, create_time_);
