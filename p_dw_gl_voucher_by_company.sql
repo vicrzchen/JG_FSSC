@@ -11,8 +11,7 @@ CREATE TABLE IF NOT EXISTS ods.dw_gl_voucher_by_company (
     create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     INDEX idx_stat_company (stat_date, company_type),
-    INDEX idx_org (pk_org),
-    INDEX idx_system (pk_system)
+    INDEX idx_org (pk_org)
 ) COMMENT '公司凭证统计表';
 
 -- 删除已存在的当月数据
