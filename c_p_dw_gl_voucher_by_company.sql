@@ -55,7 +55,7 @@ BEGIN
             1 as is_gl
         FROM 
             ods.t_ncc_listed_gl_voucher
-        WHERE pk_system = 'GL'
+        WHERE pk_system = 'GL' AND dr = 0
         GROUP BY 
             DATE_FORMAT(ts, '%Y-%m-01'),
             YEAR(ts),
@@ -75,7 +75,7 @@ BEGIN
             0 as is_gl
         FROM 
             ods.t_ncc_listed_gl_voucher
-        WHERE pk_system <> 'GL'
+        WHERE pk_system <> 'GL' AND dr = 0
         GROUP BY 
             DATE_FORMAT(ts, '%Y-%m-01'),
             YEAR(ts),
@@ -95,7 +95,7 @@ BEGIN
             1 as is_gl
         FROM 
             ods.t_ncc_unlisted_gl_voucher
-        WHERE pk_system = 'GL'
+        WHERE pk_system = 'GL' AND dr = 0
         GROUP BY 
             DATE_FORMAT(ts, '%Y-%m-01'),
             YEAR(ts),
@@ -115,7 +115,7 @@ BEGIN
             0 as is_gl
         FROM 
             ods.t_ncc_unlisted_gl_voucher
-        WHERE pk_system <> 'GL'
+        WHERE pk_system <> 'GL' AND dr = 0
         GROUP BY 
             DATE_FORMAT(ts, '%Y-%m-01'),
             YEAR(ts),
