@@ -1,7 +1,7 @@
 SELECT 
     o.name as company_name,
     ROUND(IFNULL(
-        SUM(CASE WHEN v.is_gl = 0 THEN v.voucher_count ELSE 0 END) * 100.0 / 
+        SUM(CASE WHEN v.is_gl = 0 THEN v.voucher_count ELSE 0 END)  / 
         NULLIF(SUM(v.voucher_count), 0), 
         0
     ), 2) as automation_rate
