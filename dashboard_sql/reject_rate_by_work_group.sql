@@ -2,6 +2,7 @@
 
 SELECT 
     work_group as 工作组,  -- 工作组名称
+    company_type as 公司类型,  -- 新增公司类型字段
     ROUND(IFNULL(
         total_rejects / NULLIF(total_processed, 0),  -- 计算驳回率，避免除以零
         0  -- 如果总处理数为零，则驳回率默认为0
@@ -10,6 +11,7 @@ FROM (
     -- 计算每个工作组的总驳回数和总处理数
     SELECT 
         r.work_group,
+        r.company_type,  -- 新增company_type字段
         SUM(r.reject_count) as total_rejects,  -- 计算工作组总驳回数
         p.total_processed as total_processed  -- 获取工作组总处理数
     FROM ods.dm_reject_by_org r
@@ -32,8 +34,8 @@ FROM (
         r.stat_year = YEAR(CURRENT_DATE)  -- 过滤当前年份
         AND r.stat_month = MONTH(CURRENT_DATE)  -- 过滤当前月份
         AND r.work_group IS NOT NULL  -- 确保工作组不为空
-    GROUP BY r.work_group  -- 按工作组分组
+    GROUP BY r.work_group, r.company_type  -- 按工作组和公司类型分组
 ) monthly_stats
 WHERE total_processed > 0  -- 只选择有处理数的记录
-ORDER BY 驳回率 DESC  -- 按驳回率降序排序
-LIMIT 10;  -- 限制结果为前10条
+ORDER BY  驳回率 DESC, 公司类型 ASC  -- 先按公司类型，再按驳回率降序排序
+LIMIT 20;  -- 限制结果为前10条
