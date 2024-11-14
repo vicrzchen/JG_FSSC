@@ -30,6 +30,7 @@ BEGIN
     CALL p_dw_working_staff_by_work_group();
     CALL p_dw_waiting_time_by_work_group();
     CALL p_dw_reject_reason_by_work_group();
+    CALL p_dw_duration();
     
     -- 4. 申请组织相关统计
     CALL p_dw_processed_by_apply_org();
@@ -40,7 +41,7 @@ BEGIN
 
     -- 提交事务
     COMMIT;
-    
-END //
+
+END//
 
 DELIMITER ; 

@@ -1,5 +1,3 @@
-CREATE DEFINER=`bi_ods`@`%` PROCEDURE `p_dw_execute_all`()
-BEGIN
     -- 声明处理异常的handler
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -26,6 +24,7 @@ BEGIN
     CALL p_dw_working_staff_by_work_group();
     CALL p_dw_waiting_time_by_work_group();
     CALL p_dw_reject_reason_by_work_group();
+    CALL p_dw_duration();
     
     -- 4. 申请组织相关统计
     CALL p_dw_processed_by_apply_org();
@@ -36,5 +35,3 @@ BEGIN
 
     -- 提交事务
     COMMIT;
-    
-END
