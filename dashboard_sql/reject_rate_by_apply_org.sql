@@ -1,4 +1,5 @@
 SELECT 
+    (@rank := @rank + 1) as 排名,
     org_name as 二级公司名称,
     ROUND(IFNULL(
         total_rejects / NULLIF(total_processed, 0),
@@ -26,7 +27,7 @@ FROM (
         AND r.org_code IS NOT NULL
         AND LENGTH(r.org_code) = 4
     GROUP BY r.apply_org, r.org_name, r.org_code
-) monthly_stats
+) monthly_stats, (SELECT @rank := 0) r
 WHERE total_processed > 0
 ORDER BY 驳回率 DESC, org_code ASC
 LIMIT 10;
